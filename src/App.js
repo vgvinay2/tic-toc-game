@@ -11,7 +11,6 @@ class App extends Component {
       <div className="App">
       <CounterApp />
         <p>-------------------------------</p>
-        <VisibiltyToggle />
         <p>-------------------------------</p>
         <IndecisionAppNew />
       </div>

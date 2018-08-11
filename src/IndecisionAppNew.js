@@ -10,14 +10,33 @@ class IndecisionAppNew extends Component {
       obtions: props.obtions
     }
   }
+  componentDidMount(){
+    try{
+      const json = localStorage.getItem('obtions');
+      const obtions = JSON.parse(json);
+      if(obtions){
+        this.setState(() => ({ obtions: obtions }) );
+      }
+    }catch(e){
+     // Do nothing
+    }
+  }
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.obtions.length !== this.state.obtions.length){
+      const json = JSON.stringify(this.state.obtions);
+      localStorage.setItem('obtions',json)
+    }
 
+  }
+  componentWillUnmount(){
+
+  }
   handleDeleteObtion(){
      this.setState(()=>({ obtions: [] }));
   };
   singleDeltehandler(obtionToRemove){
     this.setState((prevState)=>({
-      obtions: prevState.obtions.filter((obtion)=>{  return obtionToRemove !== obtion; })
-    }));
+      obtions: prevState.obtions.filter((obtion)=>{  return obtionToRemove !== obtion; }) }));
   };
   handlepick(){
     alert("hi");
@@ -87,6 +106,7 @@ const Obtions = (props) =>{
   return (
     <div>
     <button onClick = {props.handleDeleteObtion} >Remove All</button>
+    {props.obtions.length ===0 && <p>Please Add some obtions to get started</p>}
      {
       props.obtions.map((obtion) => 
         <Obtion 
@@ -126,10 +146,10 @@ class AddObtions extends Component {
     e.preventDefault();
     const obtion = e.target.elements.option.value.trim();
     const error = this.props.AddObtionHandler(obtion);
-    // this.setState(()=>{
-    //  return { error: error}
-    // })
     this.setState(()=>({ error }));
+    if(!error){
+      e.target.elements.option.value = '';
+    }
   };
   render() {
     return (

@@ -12,7 +12,24 @@ class CounterApp extends Component {
       count: 0,
     };
   }
+  componentDidMount(){
+    try{
+      const json = localStorage.getItem('count');
+      const count = JSON.parse(json);
+      if(count){
+        this.setState(() => ({ count: count }) );
+      }
+    }catch(e){
+     // Do nothing
+    }
+  }
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.count !== this.state.count){
+      const json = JSON.stringify(this.state.count);
+      localStorage.setItem('count',json)
+    }
 
+  }
   AdOne = () => {
     this.setState(prevState => {
       return {
