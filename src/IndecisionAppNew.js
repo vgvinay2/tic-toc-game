@@ -5,17 +5,19 @@ class IndecisionAppNew extends Component {
     this.handleDeleteObtion = this.handleDeleteObtion.bind(this);
     this.handlepick = this.handlepick.bind(this);
     this.AddObtionHandler = this.AddObtionHandler.bind(this);
+    this.singleDeltehandler= this.singleDeltehandler.bind(this);
     this.state = {
-      obtions: []
+      obtions: props.obtions
     }
   }
 
   handleDeleteObtion(){
-     this.setState(()=>{
-      return {
-        obtions: []
-      }
-     });
+     this.setState(()=>({ obtions: [] }));
+  };
+  singleDeltehandler(obtionToRemove){
+    this.setState((prevState)=>({
+      obtions: prevState.obtions.filter((obtion)=>{  return obtionToRemove !== obtion; })
+    }));
   };
   handlepick(){
     alert("hi");
@@ -27,11 +29,12 @@ class IndecisionAppNew extends Component {
     } else if(this.state.obtions.indexOf(obtion) > -1){
       return "this Item alredy exist";
     }
-    this.setState((prevState)=>{
-      return {
-        obtions: prevState.obtions.concat(obtion)
-      }
-    })
+    // this.setState((prevState)=>{
+    //   return {
+    //     obtions: prevState.obtions.concat(obtion)
+    //   }
+    // })
+    this.setState((prevState)=> ({ obtions: prevState.obtions.concat(obtion) }) );
   };
 
   render() {
@@ -48,57 +51,67 @@ class IndecisionAppNew extends Component {
         <Obtions 
          obtions = {this.state.obtions}
          handleDeleteObtion = {this.handleDeleteObtion}
+         singleDeltehandler = {this.singleDeltehandler}
          />
         <AddObtions AddObtionHandler = {this.AddObtionHandler}/>
       </div>
     );
   }
 }
-class Header extends Component {
-  render() {
-    return (
-      <div>
-        <h1>{this.props.title}</h1>
-        <h2>{this.props.subtitle}</h2>
-      </div>
-    );
-  }
+IndecisionAppNew.defaultProps = {
+  obtions: []
 }
-class Action extends Component {
- render() {
-    return (
-      <div>
-        <button 
-          onClick = {this.props.handlepick} 
-          disabled = {this.props.hasobtions ? false :true }
-          >
-          What should I do
-        </button>
-      </div>
-    );
-  }
+const Header = (props)=>{
+  return (
+    <div>
+      <h1>{props.title}</h1>
+      <h2>{props.subtitle}</h2>
+    </div>
+  );
 }
 
-class Obtions extends Component {
-  render() {
-    return (
-      <div>
-      <button onClick = {this.props.handleDeleteObtion} >Remove All</button>
-       {
-         this.props.obtions.map((obtion) => <Obtion key = {obtion} ObtionText = {obtion} />)
-       }
-      </div>
-    );
-  }
+const Action = (props) =>{
+  return (
+    <div>
+      <button 
+        onClick = {props.handlepick} 
+        disabled = {props.hasobtions ? false :true }
+        >
+        What should I do
+      </button>
+    </div>
+  );
 }
-class Obtion extends Component {
-  render() {
-    return (
-      <div>
-      {this.props.ObtionText}
-      </div>
-    );
-  }
+
+const Obtions = (props) =>{
+  return (
+    <div>
+    <button onClick = {props.handleDeleteObtion} >Remove All</button>
+     {
+      props.obtions.map((obtion) => 
+        <Obtion 
+          key = {obtion}
+          ObtionText = {obtion}
+          singleDeltehandler = {props.singleDeltehandler}
+      
+      />)
+     }
+    </div>
+  );
+}
+
+const Obtion = (props) => {
+  return (
+    <div>
+      {props.ObtionText}
+      <button
+        onClick = {(e)=>{
+          props.singleDeltehandler(props.ObtionText)
+        }} >
+        Remove
+      </button>
+    </div>
+  );
 }
 
 class AddObtions extends Component {
@@ -113,9 +126,10 @@ class AddObtions extends Component {
     e.preventDefault();
     const obtion = e.target.elements.option.value.trim();
     const error = this.props.AddObtionHandler(obtion);
-    this.setState(()=>{
-     return { error: error}
-    })
+    // this.setState(()=>{
+    //  return { error: error}
+    // })
+    this.setState(()=>({ error }));
   };
   render() {
     return (
