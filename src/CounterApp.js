@@ -28,11 +28,18 @@ class CounterApp extends Component {
     });
   };
   Reset = () => {
-    this.setState(() => {
-      return {
-        count: 0,
-      };
-    });
+    console.log(`${this.state.count}`);
+    this.setState(
+      () => {
+        return {
+          count: 0,
+        };
+      },
+      () => {
+        console.log(`${this.state.count}`);
+      },
+    );
+
     //console.log("Reset"+ this.state.count);
     // Asyn behaviour of SetState Method
     // this.setState((prevState)=> {

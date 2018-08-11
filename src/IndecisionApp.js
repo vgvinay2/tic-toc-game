@@ -64,25 +64,37 @@ class Obtion extends Component {
 class FormObtions extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      option: "",
+    };
     this.AddHandler = this.AddHandler.bind(this);
   }
 
   AddHandler(e) {
     e.preventDefault();
-    console.log(e.target.elements);
-    const option = e.target.elements.option.value.trim();
-    if (option) {
+    if (this.state.option) {
       // alert(this.props.AddHandler(option));
-      this.props.AddHandler(option);
-      e.target.elements.option.value = null;
+      this.props.AddHandler(this.state.option);
+      this.setState({ option: "" });
     }
   }
+
+  handleChange = event => {
+    const { value, name } = event.target;
+    this.setState({ [name]: value });
+  };
+  
   render() {
     return (
       <div>
         <form onSubmit={this.AddHandler}>
-          <input type="text" name="option" />
-          <button>Add Obtions</button>
+          <input
+            type="text"
+            name="option"
+            value={this.state.option}
+            onChange={this.handleChange}
+          />
+          <button>Add Options</button>
         </form>
       </div>
     );
