@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import ObtionModal from './ObtionModal';
+
 class IndecisionAppNew extends Component {
   constructor(props){
     super(props);
@@ -6,8 +8,10 @@ class IndecisionAppNew extends Component {
     this.handlepick = this.handlepick.bind(this);
     this.AddObtionHandler = this.AddObtionHandler.bind(this);
     this.singleDeltehandler= this.singleDeltehandler.bind(this);
+    this.handlOkay = this.handlOkay.bind(this);
     this.state = {
-      obtions: props.obtions
+      obtions: props.obtions,
+      selectedObtion: undefined
     }
   }
   componentDidMount(){
@@ -31,6 +35,9 @@ class IndecisionAppNew extends Component {
   componentWillUnmount(){
 
   }
+  handlOkay(){
+    this.setState(() => ({ selectedObtion: undefined  }) );
+  }
   handleDeleteObtion(){
      this.setState(()=>({ obtions: [] }));
   };
@@ -39,7 +46,8 @@ class IndecisionAppNew extends Component {
       obtions: prevState.obtions.filter((obtion)=>{  return obtionToRemove !== obtion; }) }));
   };
   handlepick(){
-    alert("hi");
+    const RandomObtion =this.state.obtions[Math.floor(Math.random() * this.state.obtions.length)];
+    this.setState(()=>   ({selectedObtion: RandomObtion })  );
   };
   
   AddObtionHandler(obtion){
@@ -73,6 +81,10 @@ class IndecisionAppNew extends Component {
          singleDeltehandler = {this.singleDeltehandler}
          />
         <AddObtions AddObtionHandler = {this.AddObtionHandler}/>
+        <ObtionModal
+          selectedObtion = {this.state.selectedObtion}
+          handlOkay = {this.handlOkay}
+        />
       </div>
     );
   }
